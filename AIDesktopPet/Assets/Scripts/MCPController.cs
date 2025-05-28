@@ -15,6 +15,52 @@ public class MCPController : MonoBehaviour
     {
         StartCoroutine(FetchFestivalInfo(onResult));
     }
+    public void CheckTodayWeather(Action<string> onResult)
+    {
+        StartCoroutine(FetchWeatherInfo(onResult));
+    }
+
+    IEnumerator FetchWeatherInfo(Action<string> onResult)
+    {
+        string city = "Beijing"; // ✅ 默认城市（你可以换成自动定位或设置项）
+        string url = $"https://api.vvhan.com/api/weather?city={city}&type=week"; // 示例免费接口
+
+        UnityWebRequest req = UnityWebRequest.Get(url);
+        yield return req.SendWebRequest();
+
+        if (req.result == UnityWebRequest.Result.Success)
+        {
+            string json = req.downloadHandler.text;
+            Debug.Log("🌤 天气信息返回：" + json);
+
+            if (json.Contains("weather"))
+            {
+                int weatherIndex = json.IndexOf("\"weather\":\"");
+                int tempIndex = json.IndexOf("\"temNight\":\"");
+                int tempDayIndex = json.IndexOf("\"temDay\":\"");
+
+                string weather = ExtractValue(json, weatherIndex + 10);
+                string tempNight = ExtractValue(json, tempIndex + 12);
+                string tempDay = ExtractValue(json, tempDayIndex + 10);
+
+                string weatherMsg = $"今天天气是 {weather}，白天 {tempDay}°C，晚上 {tempNight}°C。";
+                onResult?.Invoke(weatherMsg);
+                yield break;
+            }
+            onResult?.Invoke("");
+        }
+        else
+        {
+            Debug.LogWarning("🌤 获取天气失败：" + req.error);
+            onResult?.Invoke("");
+        }
+    }
+
+    private string ExtractValue(string json, int start)
+    {
+        int end = json.IndexOf("\"", start);
+        return json.Substring(start, end - start);
+    }
 
     IEnumerator FetchFestivalInfo(Action<string> onResult)
     {
@@ -55,7 +101,7 @@ public class MCPController : MonoBehaviour
        
     }
 
-    void SayTimeStatus()
+   public void SayTimeStatus()
     {
         DateTime now = DateTime.Now;
         string hourStr = now.ToString("HH:mm");

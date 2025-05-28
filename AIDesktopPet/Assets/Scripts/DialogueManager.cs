@@ -57,20 +57,22 @@ public class DialogueManager : MonoBehaviour
             // ✅ 请求 MCP 获取节日信息
             MCPController.Instance.CheckTodayFestival((festivalMessage) =>
             {
-                // 拼接完整的 prompt 给 DeepSeek
-                string prompt =
-                    $"{festivalMessage} 今天是 {fullDate}，{weekDay}，现在是 {currentTime}。" +
-                    $"用户说：{userInput}";
-
-                Debug.Log("📤 发送给 AI 的完整内容：" + prompt);
-
-                DeepSeekChatManager.Instance.SendMessageToAI(prompt, (reply) =>
+                MCPController.Instance.CheckTodayWeather((weatherMessage) =>
                 {
-                    petReplyText.text = reply;
-                    isWaitingForAI = false;
-                    RestartIdleTimer();
+                    string prompt = $"{festivalMessage} {weatherMessage} 今天是 {fullDate}，{weekDay}，现在是 {currentTime}。" +
+                                    $"用户说：{userInput}";
+
+                    Debug.Log("📤 发送给 AI 的完整内容：" + prompt);
+
+                    DeepSeekChatManager.Instance.SendMessageToAI(prompt, (reply) =>
+                    {
+                        petReplyText.text = reply;
+                        isWaitingForAI = false;
+                        RestartIdleTimer();
+                    });
                 });
             });
+
         }
     }
 
