@@ -3104,7 +3104,7 @@ RectTransform:
   m_GameObject: {fileID: 1216536038}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.48718134, y: 0.63189113, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 420992379}
@@ -3118,8 +3118,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -227, y: 33.6}
-  m_SizeDelta: {x: 232.1834, y: 309.4101}
+  m_AnchoredPosition: {x: -103, y: -5}
+  m_SizeDelta: {x: 224.6026, y: 314.825}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1216536040
 MonoBehaviour:
@@ -3999,8 +3999,8 @@ MonoBehaviour:
   toggleButton: {fileID: 1465859798}
   toDoPanel: {fileID: 1216536038}
   buttonText: {fileID: 1214074940}
-  showText: Show To-Do List
-  hideText: Hide To-Do List
+  showText: '                                                                                   '
+  hideText: '                                                               '
 --- !u!114 &1465859798
 MonoBehaviour:
   m_ObjectHideFlags: 0
