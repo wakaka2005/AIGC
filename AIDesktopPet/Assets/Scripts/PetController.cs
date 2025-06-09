@@ -41,11 +41,19 @@ public class PetUIDragAndClick : MonoBehaviour, IBeginDragHandler, IDragHandler,
     private Vector2 dragStartPosition;
     private bool hasDragged = false; // 新增：标记是否真的拖动了
 
+    // class 里
+    private Quaternion originalRotation;
+
+
     void Start()
     {
         rectTransform = GetComponent<RectTransform>();
         canvas = GetComponentInParent<Canvas>();
         originalScale = rectTransform.localScale;
+
+        // —— 新增这行 —— 
+        originalRotation = rectTransform.localRotation;
+
 
         // 获取或添加 CanvasGroup
         canvasGroup = GetComponent<CanvasGroup>();
@@ -297,10 +305,24 @@ public class PetUIDragAndClick : MonoBehaviour, IBeginDragHandler, IDragHandler,
     // 摇摆动画
     private void PlayShakeAnimation()
     {
-        Debug.Log("🎋 播放摇摆动画");
-        rectTransform.DOPunchRotation(new Vector3(0, 0, 20f), 0.5f, 10, 0.5f);
-        
+        Debug.Log("🎋 播放摇摆动画，先重置再抖动");
+
+        // 1. 停掉任何未完成的旋转 Tween
+        rectTransform.DOKill();
+
+        // 2. 立即强制归位到「最初旋转」
+        rectTransform.localRotation = originalRotation;
+
+        // 3. 做一次 PunchRotation，抖完后再把旋转锁回去
+        rectTransform
+            .DOPunchRotation(new Vector3(0, 0, 20f), 0.5f, 10, 0.5f)
+            .OnComplete(() =>
+            {
+                // 确保抖完后，一定回到最初角度
+                rectTransform.localRotation = originalRotation;
+            });
     }
+
 
     // 跳跃动画
     private void PlayJumpAnimation()
