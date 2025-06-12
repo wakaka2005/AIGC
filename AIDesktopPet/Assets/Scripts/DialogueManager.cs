@@ -11,7 +11,7 @@ public class DialogueManager : MonoBehaviour
     public InputField inputField;
     public Button sendButton;
 
-    public float idleTimeout = 10f; // 超时时间（秒）
+    public float idleTimeout = 20f; // 超时时间（秒）
     private Coroutine autoCloseCoroutine;
 
     public static DialogueManager Instance;
